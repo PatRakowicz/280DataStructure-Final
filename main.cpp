@@ -17,7 +17,7 @@ using namespace std;
 // }
 
 void testHEAP() {
-  const int NUM_PALLETS = 2;
+  const int NUM_PALLETS = 10;
 
     InventoryGenerator generator("data.csv");
     Heap myHeap;

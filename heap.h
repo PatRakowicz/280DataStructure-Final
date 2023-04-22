@@ -82,7 +82,7 @@ void Heap::destroy(node* node)
 }
 
 void Heap::swap(node* n1, node* n2) {
-    cout << "swaping" << endl;
+    // cout << "swaping" << endl;
     node* parent = n1->parent;
     node* right = n1->rightChild;
     node* left = n1->leftChild;
@@ -111,14 +111,14 @@ void Heap::swap(node* n1, node* n2) {
 
 void Heap::heapify(node* lowest) {
     node* n = lowest;
-    cout << "testing heap at " << n->id << endl;
+    // cout << "testing heap at " << n->id << endl;
     if (n->leftChild != nullptr && n->leftChild->qty_on_hand <= n->qty_on_hand) {
-        cout << "left fault" << endl;
+        // cout << "left fault" << endl;
         n = n->leftChild;
     }
 
     if (n->rightChild != nullptr && n->rightChild->qty_on_hand <= n->qty_on_hand) {
-        cout << "right fault" << endl;
+        // cout << "right fault" << endl;
         n = n->rightChild;
     }
 
@@ -138,7 +138,7 @@ Heap::~Heap() {
 }
 
 void Heap::setTail(node* n) {
-    cout << "setting tail" << endl;
+    // cout << "setting tail" << endl;
     if(n->parent == nullptr) {
         tail = n;
 
@@ -194,7 +194,7 @@ void Heap::enqueue(node* n) {
         tail->rightChild = n;
         n->parent = tail;
         heapify();
-        cout << "heapify finished" << endl;
+        // cout << "heapify finished" << endl;
         setTail(tail);
     }
 }
@@ -211,13 +211,20 @@ void Heap::addItem(string city, string state, int qoh) {
     n->city = city;
     n->state = state;
     n->qty_on_hand = qoh;
+    n->parent = nullptr;
+    n->leftChild = nullptr;
+    n->rightChild = nullptr;
     enqueue(n);
 }
 
-void Heap::printItems(node* node) {
-    cout << node->id  << " : " << node->qty_on_hand << endl;
-    printItems(node->leftChild);
-    printItems(node->rightChild);
+void Heap::printItems(node* n) {
+    cout << n->id  << " : " << n->qty_on_hand << endl;
+    if (n->leftChild != nullptr) {
+        printItems(n->leftChild);
+    }
+    if (n->rightChild != nullptr) {
+        printItems(n->rightChild);
+    }
 }
 
 void Heap::printItems() {
