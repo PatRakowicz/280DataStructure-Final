@@ -26,6 +26,10 @@ void testBST() {
 //	 Search for pallets by city
 	cout << "All pallets in Houston:\n";
 	bst.printByLocation("Smithfield", false);
+
+	cout << "Remove Pallet \n";
+	bst.remove(6);
+	bst.printInorder();
 }
 
 void testHEAP() {

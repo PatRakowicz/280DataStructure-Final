@@ -30,7 +30,7 @@ public:
 
 	void insert(Pallet p) { root = insertHelper(root, p); }
 
-	void remove(Pallet p) { root = removeHelper(root, p); }
+	void remove(int pallet_number) { root = removeHelper(root, pallet_number); }
 
 	Pallet find(int pallet_number);
 
@@ -45,7 +45,7 @@ private:
 
 	Node *insertHelper(Node *node, Pallet p);
 
-	Node *removeHelper(Node *node, Pallet p);
+	Node* removeHelper(Node* node, int pallet_number);
 
 	Node *findHelper(Node *node, int pallet_number);
 
@@ -87,26 +87,26 @@ Node *BST::insertHelper(Node *node, Pallet p) {
 	return node;
 }
 
-Node *BST::removeHelper(Node *node, Pallet p) {
+Node* BST::removeHelper(Node* node, int pallet_number) {
 	if (node == nullptr) {
 		return node;
-	} else if (p.pallet_number < node->pallet.pallet_number) {
-		node->left = removeHelper(node->left, p);
-	} else if (p.pallet_number > node->pallet.pallet_number) {
-		node->right = removeHelper(node->right, p);
+	} else if (pallet_number < node->pallet.pallet_number) {
+		node->left = removeHelper(node->left, pallet_number);
+	} else if (pallet_number > node->pallet.pallet_number) {
+		node->right = removeHelper(node->right, pallet_number);
 	} else {
 		if (node->left == nullptr) {
-			Node *temp = node->right;
+			Node* temp = node->right;
 			delete node;
 			return temp;
 		} else if (node->right == nullptr) {
-			Node *temp = node->left;
+			Node* temp = node->left;
 			delete node;
 			return temp;
 		} else {
-			Node *temp = minNode(node->right);
+			Node* temp = minNode(node->right);
 			node->pallet = temp->pallet;
-			node->right = removeHelper(node->right, temp->pallet);
+			node->right = removeHelper(node->right, temp->pallet.pallet_number);
 		}
 	}
 	return node;
