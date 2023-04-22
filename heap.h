@@ -4,12 +4,13 @@
 #include <string>
 #include <iostream>
 #include "invGenerator.h"
+using namespace std;
 
 struct node
 {
 	int id;
-    std::string city;
-    std::string state;
+    string city;
+    string state;
     int qty_on_hand;
 	node* parent;
 	node* leftChild;
@@ -20,7 +21,7 @@ class Heap {
     private:
         node* root;
         node* tail;
-        int count = 0;
+        int count;
         int check(node* node);
         void destroy(node* node);
         void swap(node* n1, node* n2);
@@ -32,13 +33,17 @@ class Heap {
         void restock(int amount); //restocks the item
         void enqueue(node* n);
         node* dequeue();
-        void addItem(std::string city, std::string state, int qoh);
+        void addItem(string city, string state, int qoh);
         void setTail(node* n);
         void printItems();
         void printItems(node* node);
 };
 
-Heap::Heap() {}
+Heap::Heap() {
+    root = nullptr;
+    tail = nullptr;
+    count = 0;
+}
 
 int Heap::check(node* node) {
 	if (node->leftChild != nullptr && node->rightChild != nullptr) {
@@ -77,10 +82,11 @@ void Heap::destroy(node* node)
 }
 
 void Heap::swap(node* n1, node* n2) {
+    cout << "swaping" << endl;
     node* parent = n1->parent;
     node* right = n1->rightChild;
     node* left = n1->leftChild;
-
+    
     n1->parent = n2->parent;
     n1->leftChild = n2->leftChild;
     n1->rightChild = n2->leftChild;
@@ -105,11 +111,14 @@ void Heap::swap(node* n1, node* n2) {
 
 void Heap::heapify(node* lowest) {
     node* n = lowest;
-    if (n->leftChild->qty_on_hand < n->qty_on_hand) {
+    cout << "testing heap" << endl;
+    if (n->leftChild != nullptr && n->leftChild->qty_on_hand <= n->qty_on_hand) {
+        cout << "left fault" << endl;
         n = n->leftChild;
     }
 
-    if (n->rightChild->qty_on_hand < n->qty_on_hand) {
+    if (n->rightChild != nullptr && n->rightChild->qty_on_hand <= n->qty_on_hand) {
+        cout << "right fault" << endl;
         n = n->rightChild;
     }
 
@@ -129,6 +138,7 @@ Heap::~Heap() {
 }
 
 void Heap::setTail(node* n) {
+    cout << "setting tail" << endl;
     if(n->parent == nullptr) {
         tail = n;
 
@@ -165,20 +175,26 @@ node* Heap::dequeue() {
 }
 
 void Heap::enqueue(node* n) {
+    cout << "enqueuing " << n->id;
     if (root == nullptr) {
+        cout << " root" << endl;
         root = n;
         tail = root;
         return;
     }
 
     if (tail->leftChild == nullptr) {
+        cout << " left" << endl;
         tail->leftChild = n;
         n->parent = tail;
         heapify();
+        cout << "heapify finished" << endl;
     } else {
+        cout << " right" << endl;
         tail->rightChild = n;
         n->parent = tail;
         heapify();
+        cout << "heapify finished" << endl;
         setTail(tail);
     }
 }
@@ -189,7 +205,7 @@ void Heap::restock(int amount) {
     enqueue(n);
 }
 
-void Heap::addItem(std::string city, std::string state, int qoh) {
+void Heap::addItem(string city, string state, int qoh) {
     node* n = new node;
     n->id = ++count;
     n->city = city;
@@ -199,7 +215,7 @@ void Heap::addItem(std::string city, std::string state, int qoh) {
 }
 
 void Heap::printItems(node* node) {
-    std::cout << node->id  << " : " << node->qty_on_hand << std::endl;
+    cout << node->id  << " : " << node->qty_on_hand << endl;
     printItems(node->leftChild);
     printItems(node->rightChild);
 }
