@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+/vc140.pdb
+/main.pdb
+/main.ilk
+/.idea
