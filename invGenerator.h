@@ -57,8 +57,8 @@ public:
     }
 
 private:
-    std::vector<string> cities;
-    std::vector<string> states;
+    std::vector<std::string> cities;
+    std::vector<std::string> states;
     std::string state_name; // added for reading state name from CSV
 
     int generate_weight(int seed) {
