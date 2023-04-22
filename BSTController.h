@@ -27,25 +27,30 @@ public:
 	BST() : root(nullptr) {}
 
 	void insert(Pallet p) { root = insertHelper(root, p); }
+
 	void remove(Pallet p) { root = removeHelper(root, p); }
 
 	Pallet find(int pallet_number);
 
 	void printInorder() { printInorderHelper(root); }
-	void printByLocation(const string &location, bool is_state) {
-		printByLocationHelper(root, location, is_state);
-	};
+
+	void printByLocation(const string &location, bool is_state);
 
 private:
 	Node *root;
 
 	Node *insertHelper(Node *node, Pallet p);
+
 	Node *removeHelper(Node *node, Pallet p);
+
 	Node *findHelper(Node *node, int pallet_number);
+
 	Node *minNode(Node *node);
 
 	void printInorderHelper(Node *node);
-	void printByLocationHelper(Node *node, const string &location, bool is_state);
+
+	void printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
+							   int &pallet_count);
 };
 
 Pallet BST::find(int pallet_number) {
@@ -122,17 +127,36 @@ void BST::printInorderHelper(Node *node) {
 	printInorderHelper(node->right);
 }
 
-void BST::printByLocationHelper(Node *node, const string &location, bool is_state) {
+void BST::printByLocation(const string &location, bool is_state) {
+	int missing_pallet_count = 0;
+	int pallet_count = 0;
+	printByLocationHelper(root, location, is_state, missing_pallet_count, pallet_count);
+	if (pallet_count == 0) {
+		cout << "No pallets found for " << location << endl;
+	} else if (missing_pallet_count > 0) {
+		cout << missing_pallet_count << " missing pallets in " << location << endl;
+	}
+}
+
+void BST::printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
+								int &pallet_count) {
 	if (node == nullptr) {
 		return;
 	}
-	printByLocationHelper(node->left, location, is_state);
+	printByLocationHelper(node->left, location, is_state, missing_pallet_count, pallet_count);
 	if ((is_state && node->pallet.state == location) || (!is_state && node->pallet.city == location)) {
 		cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city
 			 << ", " << node->pallet.weight << " pounds, QOH: " << node->pallet.qoh << "\n";
+		++pallet_count;
+		if (node->pallet.qoh <= 0) {
+			++missing_pallet_count;
+			if (missing_pallet_count == 1) {
+				cout << "Missing pallets found in " << location << ":" << endl;
+			}
+			cout << "Pallet " << node->pallet.pallet_number << endl;
+		}
 	}
-	printByLocationHelper(node->right, location, is_state);
+	printByLocationHelper(node->right, location, is_state, missing_pallet_count, pallet_count);
 }
-
 
 #endif //INC_280DATASTRUCTURE_FINAL_BSTCONTROLLER_H
