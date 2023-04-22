@@ -12,6 +12,8 @@
 #include <algorithm>
 #include "invGenerator.h"
 
+using namespace std;
+
 struct Node {
     Pallet pallet;
     Node *left;
@@ -108,7 +110,7 @@ private:
             return;
         }
         printInorderHelper(node->left);
-        std::cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city
+        cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city
                   << ", " << node->pallet.weight << " pounds, QOH: " << node->pallet.qoh << "\n";
         printInorderHelper(node->right);
     }
