@@ -21,21 +21,27 @@ struct Pallet {
 class InventoryGenerator {
 public:
     InventoryGenerator(const std::string &filename) {
-        // Read the CSV file containing cities and states
-        std::ifstream infile(filename);
-        std::string line;
-        std::string tmp;
-        getline(infile, line); // Skip the header line
-        while (getline(infile, line)) {
-            std::string city, state;
-            std::istringstream iss(line);
-            getline(iss, city, ',');
-            getline(iss, tmp, ',');
-            getline(iss, tmp, ',');
-            getline(iss, state_name, ',');
-            cities.push_back(city);
-            states.push_back(state_name);
-        }
+		// Read the CSV file containing cities and states
+		std::ifstream infile(filename);
+		std::string line;
+		std::string tmp;
+		getline(infile, line); // Skip the header line
+		while (getline(infile, line)) {
+			std::string city, state;
+			std::istringstream iss(line);
+			getline(iss, city, ',');
+			getline(iss, tmp, ',');
+			getline(iss, tmp, ',');
+			getline(iss, state_name, ',');
+			if (state_name.front() == '\"') {
+				state_name = state_name.substr(1, state_name.size() - 2);
+			}
+			if (city.front() == '\"') {
+				city = city.substr(1, city.size() - 2);
+			}
+			cities.push_back(city);
+			states.push_back(state_name);
+		}
     }
 
     Pallet generate_pallet(int pallet_number) {
