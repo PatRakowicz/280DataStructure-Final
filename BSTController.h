@@ -108,7 +108,8 @@ private:
             return;
         }
         printInorderHelper(node->left);
-        std::cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city << ", " << node->pallet.weight << " pounds, QOH: " << node->pallet.qoh << "\n";
+        std::cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city
+                  << ", " << node->pallet.weight << " pounds, QOH: " << node->pallet.qoh << "\n";
         printInorderHelper(node->right);
     }
 };
