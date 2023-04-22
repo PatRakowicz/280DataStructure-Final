@@ -26,6 +26,8 @@ class BST {
 public:
 	BST() : root(nullptr) {}
 
+	~BST() { deleteTree(root); }
+
 	void insert(Pallet p) { root = insertHelper(root, p); }
 
 	void remove(Pallet p) { root = removeHelper(root, p); }
@@ -38,6 +40,8 @@ public:
 
 private:
 	Node *root;
+
+	void deleteTree(Node *node);
 
 	Node *insertHelper(Node *node, Pallet p);
 
@@ -52,6 +56,15 @@ private:
 	void printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
 							   int &pallet_count);
 };
+
+void BST::deleteTree(Node *node) {
+	if (node == nullptr) {
+		return;
+	}
+	deleteTree(node->left);
+	deleteTree(node->right);
+	delete node;
+}
 
 Pallet BST::find(int pallet_number) {
 	Node *node = findHelper(root, pallet_number);
