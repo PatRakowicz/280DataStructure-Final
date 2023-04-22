@@ -6,6 +6,8 @@
 *.lo
 *.o
 *.obj
+/.idea
+/cmake-build-debug
 
 # Precompiled Headers
 *.gch
@@ -30,3 +32,7 @@
 *.exe
 *.out
 *.app
+/CMakeLists.txt
+/main.ilk
+/main.pdb
+/vc140.pdb
