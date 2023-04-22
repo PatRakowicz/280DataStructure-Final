@@ -42,6 +42,10 @@ public:
         }
     }
 
+    void printInorder() {
+        printInorderHelper(root);
+    }
+
 private:
     Node *root;
 
@@ -97,6 +101,15 @@ private:
             current = current->left;
         }
         return current;
+    }
+
+    void printInorderHelper(Node *node) {
+        if (node == nullptr) {
+            return;
+        }
+        printInorderHelper(node->left);
+        std::cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city << ", " << node->pallet.weight << " pounds\n";
+        printInorderHelper(node->right);
     }
 };
 
