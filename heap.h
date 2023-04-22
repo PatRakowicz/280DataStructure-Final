@@ -111,7 +111,7 @@ void Heap::swap(node* n1, node* n2) {
 
 void Heap::heapify(node* lowest) {
     node* n = lowest;
-    cout << "testing heap" << endl;
+    cout << "testing heap at " << n->id << endl;
     if (n->leftChild != nullptr && n->leftChild->qty_on_hand <= n->qty_on_hand) {
         cout << "left fault" << endl;
         n = n->leftChild;
