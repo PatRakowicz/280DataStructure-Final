@@ -2,6 +2,7 @@
 #include <iostream>
 #include "BSTController.h"
 #include "invGenerator.h"
+#include "heap.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ void testBST() {
 	cout << "All pallets in Houston:\n";
 	bst.printByLocation("Smithfield", false);
 
-	cout << "Remove Pallet \n";
+	cout << "Remove Pallet #:6 \n";
 	bst.remove(6);
 	bst.printInorder();
 
@@ -36,7 +37,24 @@ void testBST() {
 }
 
 void testHEAP() {
+	const int NUM_PALLETS = 10;
 
+	InventoryGenerator generator("data.csv");
+	Heap myHeap;
+	for (int i = 1; i <= NUM_PALLETS; i++) {
+		Pallet pallet = generator.generate_pallet(i);
+		myHeap.addItem(pallet.city, pallet.state, pallet.qoh);
+		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
+			 << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
+	}
+	cout << "Before sort \n";
+	myHeap.printItems();
+
+	// while (myHeap.getRootQty() < 5) {
+	//     myHeap.restock(50);
+	// }
+
+	myHeap.checkQOH();
 }
 
 void testInvGen() {
@@ -53,8 +71,8 @@ void testInvGen() {
 
 int main() {
 //    testInvGen();
-	testBST();
-//    testHEAP();
+//    testBST();
+    testHEAP();
 
 	return 0;
 }
