@@ -3,6 +3,7 @@
 #include "BSTController.h"
 #include "invGenerator.h"
 #include "heap.h"
+
 using namespace std;
 
 void testBST() {
@@ -40,7 +41,8 @@ void testHEAP() {
 	for (int i = 1; i <= NUM_PALLETS; i++) {
 		Pallet pallet = generator.generate_pallet(i);
 		myHeap.addItem(pallet.city, pallet.state, pallet.qoh);
-		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
+		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
+			 << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
 	}
 	myHeap.printItems();
 

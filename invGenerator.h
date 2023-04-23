@@ -58,7 +58,7 @@ public:
         int index = index_dist(gen);
 
         // Create the pallet and return it
-        Pallet pallet = { pallet_number, states[index], cities[index], generate_weight() };
+        Pallet pallet = { pallet_number, states[index], cities[index], generate_weight(seed), generate_qoh(seed)};
         return pallet;
     }
 
