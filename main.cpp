@@ -66,7 +66,7 @@ void testInvGen() {
 int main() {
 //    testInvGen();
 //    testBST();
-//    testHEAP();
+    testHEAP();
 
 	return 0;
 }
