@@ -28,7 +28,7 @@ void testBST() {
 	cout << "All pallets in Houston:\n";
 	bst.printByLocation("Smithfield", false);
 
-	cout << "Remove Pallet \n";
+	cout << "Remove Pallet #:6 \n";
 	bst.remove(6);
 	bst.printInorder();
 }
@@ -44,11 +44,14 @@ void testHEAP() {
 		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
 			 << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
 	}
+	cout << "Before sort \n";
 	myHeap.printItems();
 
 	// while (myHeap.getRootQty() < 5) {
 	//     myHeap.restock(50);
 	// }
+
+	myHeap.checkQOH();
 }
 
 void testInvGen() {
