@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <queue>
+#include <functional>
 #include "invGenerator.h"
 
 using namespace std;
@@ -247,17 +248,23 @@ void Heap::checkQOH() {
 	sortNodeByQOH(root);
 
 	cout << "Items sorted by QOH (least to greatest):" << endl;
-	queue<node*> q;
-	q.push(root);
-	while (!q.empty()) {
-		node* n = q.front();
-		q.pop();
+
+	// Use a priority queue to store the nodes in order of QOH.
+	priority_queue<node*, vector<node*>, function<bool(node*, node*)>> pq(
+			[](node* n1, node* n2) {
+				return n1->qty_on_hand > n2->qty_on_hand;
+			});
+
+	pq.push(root);
+	while (!pq.empty()) {
+		node* n = pq.top();
+		pq.pop();
 		cout << n->id << " : " << n->qty_on_hand << endl;
 		if (n->leftChild != nullptr) {
-			q.push(n->leftChild);
+			pq.push(n->leftChild);
 		}
 		if (n->rightChild != nullptr) {
-			q.push(n->rightChild);
+			pq.push(n->rightChild);
 		}
 	}
 }
