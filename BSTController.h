@@ -25,34 +25,26 @@ struct Node {
 class BST {
 public:
 	BST() : root(nullptr) {}
-
 	~BST() { deleteTree(root); }
 
 	void insert(Pallet p) { root = insertHelper(root, p); }
-
 	void remove(int pallet_number) { root = removeHelper(root, pallet_number); }
 
 	Pallet find(int pallet_number);
 
 	void printInorder() { printInorderHelper(root); }
-
 	void printByLocation(const string &location, bool is_state);
 
 private:
 	Node *root;
-
 	void deleteTree(Node *node);
 
 	Node *insertHelper(Node *node, Pallet p);
-
 	Node *removeHelper(Node *node, int pallet_number);
-
 	Node *findHelper(Node *node, int pallet_number);
-
 	Node *minNode(Node *node);
 
 	void printInorderHelper(Node *node);
-
 	void printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
 							   int &pallet_count);
 };
