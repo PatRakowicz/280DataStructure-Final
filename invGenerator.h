@@ -58,7 +58,7 @@ public:
         int index = index_dist(gen);
 
         // Create the pallet and return it
-        Pallet pallet = { pallet_number, states[index], cities[index], generate_weight() };
+        Pallet pallet = { pallet_number, states[index], cities[index], generate_weight(seed), generate_qoh(seed) };
         return pallet;
     }
 
@@ -77,7 +77,7 @@ private:
     }
 
     int generate_qoh(int seed) {
-        // Generate a random weight between 1 and 1000 pounds
+        // Generate a random Quantity on hand between 1 and 1000 Units
         // unsigned seed = chrono::system_clock::now().time_since_epoch().count();
 
         std::mt19937 gen(seed);
