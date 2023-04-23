@@ -27,6 +27,10 @@ void testHEAP() {
         cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
     }
     myHeap.printItems();
+
+    // while (myHeap.getRootQty() < 5) {
+    //     myHeap.restock(50);
+    // }
 }
 
 void testInvGen() {

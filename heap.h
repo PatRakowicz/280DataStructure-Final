@@ -30,6 +30,7 @@ class Heap {
     public:
         Heap();
         ~Heap();
+        int getRootQty();
         void restock(int amount); //restocks the item
         void enqueue(node* n);
         node* dequeue();
@@ -43,6 +44,10 @@ Heap::Heap() {
     root = nullptr;
     tail = nullptr;
     count = 0;
+}
+
+int Heap::getRootQty() {
+    return root->qty_on_hand;
 }
 
 int Heap::check(node* node) {
@@ -83,49 +88,42 @@ void Heap::destroy(node* node)
 
 void Heap::swap(node* n1, node* n2) {
     // cout << "swaping" << endl;
-    node* parent = n1->parent;
-    node* right = n1->rightChild;
-    node* left = n1->leftChild;
-    
-    n1->parent = n2->parent;
-    n1->leftChild = n2->leftChild;
-    n1->rightChild = n2->leftChild;
-    n1->rightChild->parent = n1;
-    n1->leftChild->parent = n1;
-    if (n1->parent->leftChild == n2) {
-        n1->parent->leftChild = n1;
-    } else if (n1->parent->rightChild == n2) {
-        n1->parent->rightChild = n1;
-    }
+    int tmpId = n1->id;
+    string tmpCity = n1->city;
+    string tmpState = n1->state;
+    int tmpQty = n1->qty_on_hand;
 
-    n2->parent = parent;
-    n2->rightChild = right;
-    n2->leftChild = left;
-    if (n2->parent->leftChild == n1) {
-        n2->parent->leftChild = n2;
-    } else if (n1->parent->rightChild == n1) {
-        n2->parent->rightChild = n2;
-    }
+    n1->id = n2->id;
+    n1->city = n2->city;
+    n1->state = n2->state;
+    n1->qty_on_hand = n2->qty_on_hand;
 
+    n2->id = tmpId;
+    n2->city = tmpCity;
+    n2->state = tmpState;
+    n2->qty_on_hand = tmpQty;
 }
 
 void Heap::heapify(node* lowest) {
     node* n = lowest;
+    node* left = lowest->leftChild;
+    node* right = lowest->rightChild;
     // cout << "testing heap at " << n->id << endl;
-    if (n->leftChild != nullptr && n->leftChild->qty_on_hand <= n->qty_on_hand) {
+    if (left != nullptr && left->qty_on_hand < n->qty_on_hand) {
         // cout << "left fault" << endl;
-        n = n->leftChild;
+        n = left;
     }
 
-    if (n->rightChild != nullptr && n->rightChild->qty_on_hand <= n->qty_on_hand) {
-        // cout << "right fault" << endl;
-        n = n->rightChild;
+    if (right != nullptr && right->qty_on_hand < n->qty_on_hand) {
+        // cout << "right fault" << endl; 
+        n = right;
     }
+
 
     if (n != lowest) {
-        swap(lowest, n);
+        swap(n, lowest);
 
-        heapify(lowest);
+        heapify(n);
     }
 }
 
@@ -139,19 +137,19 @@ Heap::~Heap() {
 
 void Heap::setTail(node* n) {
     // cout << "setting tail" << endl;
-    if(n->parent == nullptr) {
+    if (n->parent == nullptr) {
         tail = n;
 
-        while(tail->leftChild != nullptr) {
+        while (tail->leftChild != nullptr) {
             tail = tail->leftChild;
         }
-    } else if(n->parent->leftChild == n) {
+    } else if (n->parent->leftChild == n) {
         tail = n->parent->rightChild;
 
-        while(tail->leftChild != nullptr) {
+        while (tail->leftChild != nullptr) {
             tail = tail->leftChild;
         }
-    } else if(n->parent->rightChild == n) {
+    } else if (n->parent->rightChild == n) {
         setTail(n->parent);
     }
 }
@@ -175,22 +173,22 @@ node* Heap::dequeue() {
 }
 
 void Heap::enqueue(node* n) {
-    cout << "enqueuing " << n->id;
+    // cout << "enqueuing " << n->id;
     if (root == nullptr) {
-        cout << " root" << endl;
+        // cout << " root" << endl;
         root = n;
         tail = root;
         return;
     }
 
     if (tail->leftChild == nullptr) {
-        cout << " left" << endl;
+        // cout << " left" << endl;
         tail->leftChild = n;
         n->parent = tail;
         heapify();
-        cout << "heapify finished" << endl;
+        // cout << "heapify finished" << endl;
     } else {
-        cout << " right" << endl;
+        // cout << " right" << endl;
         tail->rightChild = n;
         n->parent = tail;
         heapify();
@@ -218,11 +216,9 @@ void Heap::addItem(string city, string state, int qoh) {
 }
 
 void Heap::printItems(node* n) {
-    cout << n->id  << " : " << n->qty_on_hand << endl;
-    if (n->leftChild != nullptr) {
+    if (n != nullptr) {
+        cout << n->id  << " : " << n->qty_on_hand << endl;
         printItems(n->leftChild);
-    }
-    if (n->rightChild != nullptr) {
         printItems(n->rightChild);
     }
 }
