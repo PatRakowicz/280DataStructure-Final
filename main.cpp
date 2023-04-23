@@ -31,6 +31,9 @@ void testBST() {
 	cout << "Remove Pallet #:6 \n";
 	bst.remove(6);
 	bst.printInorder();
+
+	//testing branch
+	cout << "end Test";
 }
 
 void testHEAP() {
