@@ -7,7 +7,7 @@
 using namespace std;
 
 void testBST() {
-	const int NUM_PALLETS = 10;
+	const int NUM_PALLETS = 40;
 	BST bst;
 
 	InventoryGenerator generator("data.csv");
@@ -21,19 +21,17 @@ void testBST() {
 	bst.printInorder();
 
 	// Search for pallets by state
-	cout << "All pallets in Texas:\n";
+	cout << "\n All pallets in Texas:\n";
 	bst.printByLocation("Texas", true);
 
-//	 Search for pallets by city
-	cout << "All pallets in Houston:\n";
+	// Search for pallets by city
+	cout << "\n All pallets in Smithfield:\n";
 	bst.printByLocation("Smithfield", false);
 
-	cout << "Remove Pallet #:6 \n";
+	cout << "\n Remove Pallet #:6 \n";
 	bst.remove(6);
 	bst.printInorder();
 
-	//testing branch
-	cout << "end Test";
 }
 
 void testHEAP() {
@@ -71,8 +69,8 @@ void testInvGen() {
 
 int main() {
 //    testInvGen();
-//    testBST();
-    testHEAP();
+    testBST();
+//    testHEAP();
 
 	return 0;
 }
