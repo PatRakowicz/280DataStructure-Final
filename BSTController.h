@@ -18,8 +18,9 @@ struct Node {
 	Pallet pallet;
 	Node *left;
 	Node *right;
+	int height;
 
-	Node(Pallet p) : pallet(p), left(nullptr), right(nullptr) {}
+	Node(Pallet p) : pallet(p), left(nullptr), right(nullptr), height(1) {}
 };
 
 class BST {
@@ -44,15 +45,19 @@ private:
 	Node *findHelper(Node *node, int pallet_number);
 	Node *minNode(Node *node);
 
+	int getHeight(Node *node);
+	int getBalance(Node *node);
+	Node *rightRotate(Node *y);
+	Node *leftRotate(Node *x);
+	Node *balancedNode(Node *node);
+
 	void printInorderHelper(Node *node);
 	void printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
 							   int &pallet_count);
 };
 
 void BST::deleteTree(Node *node) {
-	if (node == nullptr) {
-		return;
-	}
+	if (node == nullptr) { return; }
 	deleteTree(node->left);
 	deleteTree(node->right);
 	delete node;
@@ -76,7 +81,7 @@ Node *BST::insertHelper(Node *node, Pallet p) {
 	} else {
 		node->right = insertHelper(node->right, p);
 	}
-	return node;
+	return balancedNode(node);
 }
 
 Node *BST::removeHelper(Node *node, int pallet_number) {
@@ -101,7 +106,7 @@ Node *BST::removeHelper(Node *node, int pallet_number) {
 			node->right = removeHelper(node->right, temp->pallet.pallet_number);
 		}
 	}
-	return node;
+	return balancedNode(node);
 }
 
 Node *BST::findHelper(Node *node, int pallet_number) {
@@ -116,16 +121,12 @@ Node *BST::findHelper(Node *node, int pallet_number) {
 
 Node *BST::minNode(Node *node) {
 	Node *current = node;
-	while (current->left != nullptr) {
-		current = current->left;
-	}
+	while (current->left != nullptr) { current = current->left; }
 	return current;
 }
 
 void BST::printInorderHelper(Node *node) {
-	if (node == nullptr) {
-		return;
-	}
+	if (node == nullptr) { return; }
 	printInorderHelper(node->left);
 	cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city
 		 << ", " << node->pallet.weight << " pounds, QOH: " << node->pallet.qoh << "\n";
@@ -145,9 +146,7 @@ void BST::printByLocation(const string &location, bool is_state) {
 
 void BST::printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
 								int &pallet_count) {
-	if (node == nullptr) {
-		return;
-	}
+	if (node == nullptr) { return; }
 	printByLocationHelper(node->left, location, is_state, missing_pallet_count, pallet_count);
 	if ((is_state && node->pallet.state == location) || (!is_state && node->pallet.city == location)) {
 		cout << "Pallet " << node->pallet.pallet_number << ": " << node->pallet.state << ", " << node->pallet.city
@@ -162,6 +161,66 @@ void BST::printByLocationHelper(Node *node, const string &location, bool is_stat
 		}
 	}
 	printByLocationHelper(node->right, location, is_state, missing_pallet_count, pallet_count);
+}
+
+int BST::getHeight(Node *node) {
+	if (node == nullptr)
+		return 0;
+	return node->height;
+}
+
+int BST::getBalance(Node *node) {
+	if (node == nullptr)
+		return 0;
+	return getHeight(node->left) - getHeight(node->right);
+}
+
+Node *BST::rightRotate(Node *y) {
+	Node *x = y->left;
+	Node *T2 = x->right;
+
+	x->right = y;
+	y->left = T2;
+
+	y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+	x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+
+	return x;
+}
+
+Node *BST::leftRotate(Node *x) {
+	Node *y = x->right;
+	Node *T2 = y->left;
+
+	y->left = x;
+	x->right = T2;
+
+	x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+	y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+
+	return y;
+}
+
+Node *BST::balancedNode(Node *node) {
+	node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+	int balance = getBalance(node);
+
+	if (balance > 1 && getBalance(node->left) >= 0)
+		return rightRotate(node);
+
+	if (balance > 1 && getBalance(node->left) < 0) {
+		node->left = leftRotate(node->left);
+		return rightRotate(node);
+	}
+
+	if (balance < -1 && getBalance(node->right) <= 0)
+		return leftRotate(node);
+
+	if (balance < -1 && getBalance(node->right) > 0) {
+		node->right = rightRotate(node->right);
+		return leftRotate(node);
+	}
+	return node;
 }
 
 #endif //INC_280DATASTRUCTURE_FINAL_BSTCONTROLLER_H
