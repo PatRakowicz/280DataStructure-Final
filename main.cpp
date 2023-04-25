@@ -3,11 +3,12 @@
 #include "BSTController.h"
 #include "invGenerator.h"
 #include "heap.h"
+#include "FuncTesting.h"
 
 using namespace std;
 
 void testBST() {
-	const int NUM_PALLETS = 40;
+	const int NUM_PALLETS = 1000;
 	BST bst;
 
 	InventoryGenerator generator("data.csv");
@@ -31,7 +32,23 @@ void testBST() {
 	cout << "\n Remove Pallet #:6 \n";
 	bst.remove(6);
 	bst.printInorder();
+/*
+	// Time Testing
+	// Measure insertion time for a single pallet into BST
+	Pallet new_pallet = generator.generate_pallet(1001);
+	auto insertion_time = measureBSTInsertionTime(bst, new_pallet);
+	std::cout << "BST insertion time for a single pallet: " << insertion_time.count() << " microseconds" << std::endl;
 
+	// Measure deletion time for a single pallet from BST
+	int pallet_number_to_remove = 852;
+	auto deletion_time = measureBSTDeletionTime(bst, pallet_number_to_remove);
+	std::cout << "BST deletion time for a single pallet: " << deletion_time.count() << " microseconds" << std::endl;
+
+	// Measure search time for a single pallet in BST
+	int pallet_number_to_find = 765;
+	auto search_time = measureBSTSearchTime(bst, pallet_number_to_find);
+	std::cout << "BST search time for a single pallet: " << search_time.count() << " microseconds" << std::endl;
+*/
 }
 
 void testHEAP() {
