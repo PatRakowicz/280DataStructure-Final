@@ -1,8 +1,8 @@
 #ifndef HEAP_H
 #define HEAP_H
 
-#include <string>
 #include <iostream>
+// vector and string are included in invGenerator.h
 #include "invGenerator.h"
 using namespace std;
 
@@ -106,6 +106,7 @@ void Heap::heapify() {
 }
 
 Heap::~Heap() {
+    pq.clear();
     delete (&pq);
 }
 
@@ -114,30 +115,31 @@ void Heap::setTail() {
 }
 
 Pallet* Heap::dequeue() {
+    Pallet* tmp = pq[root];
     swap(root, tail);
     pqLength--;
     setTail();
     heapify();
+    return tmp;
 }
 
 void Heap::enqueue(Pallet* p) {
     // cout << "enqueuing " << n->id;
-    if (root == -1) {
-        // cout << " root" << endl;
-        root = 0;
-        pq.insert(pq.begin(), p);
-        cout << pq[root]->pallet_number << endl;
-        pqLength = 1;
-        // setTail();
-    } else {
+    if (root == 0) {
         cout << "root " << pq[0]->pallet_number << endl;
         cout << "p " << p->pallet_number << endl;
-        // pq.insert(pq.begin()+pqLength, p);
+        // pq.insert(pq.begin()+pqLength-1, p);
         cout << "new " << pq[pqLength-1]->pallet_number << endl;
         cout << "size " << pq.size() << endl;
-        pqLength++;
-        // heapify();
+        // pqLength++;
+        return;
     }
+    // cout << " root" << endl;
+    root = 0;
+    pq.insert(pq.begin(), p);
+    cout << pq[root]->pallet_number << endl;
+    pqLength = 1;
+    // setTail();
 }
 
 void Heap::addPallet(Pallet* p) {
