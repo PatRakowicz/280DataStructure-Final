@@ -3,270 +3,163 @@
 
 #include <string>
 #include <iostream>
-#include <queue>
-#include <functional>
 #include "invGenerator.h"
-
 using namespace std;
 
-struct node {
-	int id;
-	string city;
-	string state;
-	int qty_on_hand;
-	node *parent;
-	node *leftChild;
-	node *rightChild;
-};
-
 class Heap {
-private:
-	node *root;
-	node *tail;
-	int count;
-
-	int check(node *node);
-	void destroy(node *node);
-
-	void swap(node *n1, node *n2);
-
-	void heapify();
-	void heapify(node *lowest);
-
-public:
-	Heap();
-	~Heap();
-	int getRootQty();
-	void restock(int amount); //restocks the item
-
-	void enqueue(node* n);
-	node *dequeue();
-
-	void addItem(string city, string state, int qoh);
-	void setTail(node *n);
-
-	void printItems();
-	void printItems(node *node);
-
-	void sortNodeByQOH(node *n);
-	void checkQOH();
+    private:
+        vector<Pallet*> pq;
+        int root;
+        int tail;
+        int pqLength;
+        void swap(int i1, int n2);
+        void setTail();
+        bool checkQOH();
+        bool checkQOH(int n);
+        void enqueue(Pallet* p);
+        Pallet* dequeue();
+        void heapify();
+        void heapify(int lowest);
+    public:
+        Heap();
+        ~Heap();
+        int getRootQty();
+        void addPallet(Pallet* p);
+        void restock(int amount); //restocks the item
+        void printItems(int n);
+        void printItems();
 };
 
 Heap::Heap() {
-	root = nullptr;
-	tail = nullptr;
-	count = 0;
+    root = -1;
+    tail = -1;
+    pqLength = 0;
 }
 
 int Heap::getRootQty() {
-	return root->qty_on_hand;
+    return pq[root]->qoh;
 }
 
-int Heap::check(node *node) {
-	if (node->leftChild != nullptr && node->rightChild != nullptr) {
-		return 3;
-	}
-	if (node->rightChild != nullptr) {
-		return 2;
-	}
-	if (node->leftChild != nullptr) {
-		return 1;
-	}
-	return 0;
+void Heap::swap(int i1, int i2) {
+    // cout << "swaping" << endl;
+    Pallet* tmp = pq[i1];
+    cout << "tmp : " << tmp->pallet_number << endl;
+    pq[i1] = pq[i2];
+    cout << "i1 : " << pq[i1]->pallet_number << endl;
+    cout << "i2 : " << pq[i2]->pallet_number << endl;
+    pq[i2] = tmp;
 }
 
-void Heap::destroy(node *node) {
-	switch (check(node)) {
-		case 3:
-			destroy(node->leftChild);
-			destroy(node->rightChild);
-			break;
+void Heap::heapify(int lowest) {
+    int n = lowest;
+    int left = (lowest*2)+1;
+    int right = (lowest*2)+2;
+    cout << "n " << pq[n]->pallet_number << endl;
+    cout << "left " << pq[left]->pallet_number << endl;
+    cout << "right " << pq[right]->pallet_number << endl;
+    // cout << "testing heap at " << n->id << endl;
+    
+    if (left < pqLength && pq[left]->qoh < pq[n]->qoh) {
+        // cout << "left fault" << endl;
+        n = left;
+    }
+    if (right < pqLength && pq[right]->qoh < pq[n]->qoh) {
+        // cout << "right fault" << endl; 
+        n = right;
+    } 
+    
+    if (n != lowest) {
+        swap(n, lowest);
 
-		case 2:
-			destroy(node->rightChild);
-			break;
-
-		case 1:
-			destroy(node->leftChild);
-			break;
-
-		default:
-			delete node;
-			break;
-	}
+        heapify(n);
+    }
 }
 
-void Heap::swap(node *n1, node *n2) {
-	// cout << "swaping" << endl;
-	int tmpId = n1->id;
-	string tmpCity = n1->city;
-	string tmpState = n1->state;
-	int tmpQty = n1->qty_on_hand;
+bool Heap::checkQOH(int n) {
+    if (n < pqLength) {
+        // cout << "end\n";
+        return true;
+    }
 
-	n1->id = n2->id;
-	n1->city = n2->city;
-	n1->state = n2->state;
-	n1->qty_on_hand = n2->qty_on_hand;
+    int left = (n*2)+1;
+    int right = (n*2) + 2;
 
-	n2->id = tmpId;
-	n2->city = tmpCity;
-	n2->state = tmpState;
-	n2->qty_on_hand = tmpQty;
+    if (left < pqLength && pq[left]->qoh > pq[n]->qoh) {
+        // cout << "end\n";
+        return false;
+    }
+
+    if (right < pqLength && pq[right]->qoh > pq[n]->qoh) {
+        // cout << "end\n";
+        return false;
+    }
+
+    return checkQOH(left) && checkQOH(right);
 }
 
-void Heap::heapify(node *lowest) {
-	node *n = lowest;
-	node *left = lowest->leftChild;
-	node *right = lowest->rightChild;
-	// cout << "testing heap at " << n->id << endl;
-	if (left != nullptr && left->qty_on_hand < n->qty_on_hand) {
-		// cout << "left fault" << endl;
-		n = left;
-	}
-
-	if (right != nullptr && right->qty_on_hand < n->qty_on_hand) {
-		// cout << "right fault" << endl;
-		n = right;
-	}
-
-	if (n != lowest) {
-		swap(n, lowest);
-
-		heapify(n);
-	}
+bool Heap::checkQOH() {
+    return checkQOH(root);
 }
 
 void Heap::heapify() {
-	heapify(root);
+    heapify(0);
 }
 
 Heap::~Heap() {
-	destroy(root);
 }
 
-void Heap::setTail(node *n) {
-	// cout << "setting tail" << endl;
-	if (n->parent == nullptr) {
-		tail = n;
-
-		while (tail->leftChild != nullptr) {
-			tail = tail->leftChild;
-		}
-	} else if (n->parent->leftChild == n) {
-		tail = n->parent->rightChild;
-
-		while (tail->leftChild != nullptr) {
-			tail = tail->leftChild;
-		}
-	} else if (n->parent->rightChild == n) {
-		setTail(n->parent);
-	}
+void Heap::setTail() {
+    tail = pqLength - 1;    
 }
 
-node *Heap::dequeue() {
-	node *n = root;
-	root = tail;
-	node *parent = root->parent;
-	if (parent->rightChild == root) {
-		parent->rightChild = nullptr;
-	} else {
-		parent->leftChild = nullptr;
-	}
-	root->parent = nullptr;
-	root->leftChild = n->leftChild;
-	root->leftChild->parent = root;
-	root->rightChild = n->rightChild;
-	root->rightChild->parent = root;
-	setTail(root);
-	return n;
+Pallet* Heap::dequeue() {
+    swap(root, tail);
+    pqLength--;
+    setTail();
+    heapify();
 }
 
-void Heap::enqueue(node* n) {
+void Heap::enqueue(Pallet* p) {
     // cout << "enqueuing " << n->id;
-    if (root == nullptr) {
+    if (root == -1) {
         // cout << " root" << endl;
-        root = n;
-        tail = root;
-        return;
-    }
-
-    if (tail->leftChild == nullptr) {
-        // cout << " left" << endl;
-        tail->leftChild = n;
-        n->parent = tail;
-        heapify();
-        // cout << "heapify finished" << endl;
+        root = 0;
+        pq.insert(pq.begin(), p);
+        cout << pq[root]->pallet_number << endl;
+        pqLength = 1;
+        // setTail();
     } else {
-        // cout << " right" << endl;
-        tail->rightChild = n;
-        n->parent = tail;
-        heapify();
-        // cout << "heapify finished" << endl;
-        setTail(tail);
+        cout << "root " << pq[0]->pallet_number << endl;
+        cout << "p " << p->pallet_number << endl;
+        // pq.insert(pq.begin()+pqLength, p);
+        cout << "new " << pq[pqLength-1]->pallet_number << endl;
+        cout << "size " << pq.size() << endl;
+        pqLength++;
+        // heapify();
     }
+}
+
+void Heap::addPallet(Pallet* p) {
+    enqueue(p);
 }
 
 void Heap::restock(int amount) {
-	node *n = dequeue();
-	n->qty_on_hand += amount;
-	enqueue(n);
+    Pallet* n = dequeue();
+    n->qoh += amount;
+    enqueue(n);
 }
 
-void Heap::addItem(string city, string state, int qoh) {
-	node *n = new node;
-	n->id = ++count;
-	n->city = city;
-	n->state = state;
-	n->qty_on_hand = qoh;
-	n->parent = nullptr;
-	n->leftChild = nullptr;
-	n->rightChild = nullptr;
-	enqueue(n);
-}
-
-void Heap::printItems(node *n) {
-	if (n != nullptr) {
-		cout << n->id << " : " << n->qty_on_hand << endl;
-		printItems(n->leftChild);
-		printItems(n->rightChild);
-	}
+void Heap::printItems(int n) {
+    if (n < pqLength && n != -1) {
+        cout << pq[n]->pallet_number  << " : " << pq[n]->qoh << endl;
+        printItems((n*2)+1);
+        printItems((n*2)+2);
+    }
+    
 }
 
 void Heap::printItems() {
-	printItems(root);
-}
-
-void Heap::sortNodeByQOH(node *n) {
-	if (n == nullptr) { return; }
-	sortNodeByQOH(n->leftChild);
-	sortNodeByQOH(n->rightChild);
-	heapify(n);
-}
-
-void Heap::checkQOH() {
-	// Sort the heap by QOH values.
-	sortNodeByQOH(root);
-
-	cout << "Items sorted by QOH (least to greatest):" << endl;
-
-	// Use a priority queue to store the nodes in order of QOH.
-	priority_queue<node*, vector<node*>, function<bool(node*, node*)>> pq(
-			[](node* n1, node* n2) {
-				return n1->qty_on_hand > n2->qty_on_hand;
-			});
-
-	pq.push(root);
-	while (!pq.empty()) {
-		node* n = pq.top();
-		pq.pop();
-		cout << n->id << " : " << n->qty_on_hand << endl;
-		if (n->leftChild != nullptr) {
-			pq.push(n->leftChild);
-		}
-		if (n->rightChild != nullptr) {
-			pq.push(n->rightChild);
-		}
-	}
+    printItems(root);
 }
 
 #endif
