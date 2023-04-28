@@ -19,7 +19,7 @@ class Heap {
         void enqueue(Pallet* p);
         Pallet* dequeue();
         void heapify();
-        void heapify(int lowest);
+        // void heapify(int lowest);
     public:
         Heap();
         ~Heap();
@@ -31,6 +31,7 @@ class Heap {
 };
 
 Heap::Heap() {
+    pq.clear();
     root = -1;
     tail = -1;
     pqLength = 0;
@@ -43,40 +44,46 @@ int Heap::getRootQty() {
 void Heap::swap(int i1, int i2) {
     // cout << "swaping" << endl;
     Pallet* tmp = pq[i1];
-    cout << "tmp : " << tmp->pallet_number << endl;
+    // cout << "tmp : " << tmp->pallet_number << endl;
     pq[i1] = pq[i2];
-    cout << "i1 : " << pq[i1]->pallet_number << endl;
-    cout << "i2 : " << pq[i2]->pallet_number << endl;
+    // cout << "i1 : " << pq[i1]->pallet_number << endl;
+    // cout << "i2 : " << pq[i2]->pallet_number << endl;
     pq[i2] = tmp;
 }
 
-void Heap::heapify(int lowest) {
-    int n = lowest;
-    int left = (lowest*2)+1;
-    int right = (lowest*2)+2;
-    cout << "n " << pq[n]->pallet_number << endl;
-    cout << "left " << pq[left]->pallet_number << endl;
-    cout << "right " << pq[right]->pallet_number << endl;
-    // cout << "testing heap at " << n->id << endl;
+// void Heap::heapify(int lowest) {
+//     if (lowest >= pqLength) {
+//         return;
+//     }
+//     int n = lowest;
+//     int left = (lowest*2)+1;
+//     int right = (lowest*2)+2;
+//     cout << "n " << pq[n]->pallet_number << " " << pq[n]->qoh << endl;
+//     cout << "left " << pq[left]->pallet_number << " " << pq[left]->qoh << endl;
+//     cout << "right " << pq[right]->pallet_number << " " << pq[right]->qoh << endl;
+//     // cout << "testing heap at " << n->id << endl;
     
-    if (left < pqLength && pq[left]->qoh < pq[n]->qoh) {
-        // cout << "left fault" << endl;
-        n = left;
-    }
-    if (right < pqLength && pq[right]->qoh < pq[n]->qoh) {
-        // cout << "right fault" << endl; 
-        n = right;
-    } 
+//     if (left < pqLength && pq[left]->qoh < pq[n]->qoh) {
+//         // cout << "left fault" << endl;
+//         n = left;
+//     }
+//     if (right < pqLength && pq[right]->qoh < pq[n]->qoh) {
+//         // cout << "right fault" << endl; 
+//         n = right;
+//     } 
     
-    if (n != lowest) {
-        swap(n, lowest);
+//     if (n != lowest) {
+//         swap(n, lowest);
 
-        heapify(n);
-    }
-}
+//         heapify(n);
+//     } else {
+//         heapify(right);
+//         heapify(left);
+//     }
+// }
 
 bool Heap::checkQOH(int n) {
-    if (n < pqLength) {
+    if (n >= pqLength) {
         // cout << "end\n";
         return true;
     }
@@ -84,13 +91,15 @@ bool Heap::checkQOH(int n) {
     int left = (n*2)+1;
     int right = (n*2) + 2;
 
-    if (left < pqLength && pq[left]->qoh > pq[n]->qoh) {
+    if (left < pqLength && pq[left]->qoh < pq[n]->qoh) {
         // cout << "end\n";
+        swap(left, n);
         return false;
     }
 
-    if (right < pqLength && pq[right]->qoh > pq[n]->qoh) {
+    if (right < pqLength && pq[right]->qoh < pq[n]->qoh) {
         // cout << "end\n";
+        swap(right, n);
         return false;
     }
 
@@ -102,7 +111,8 @@ bool Heap::checkQOH() {
 }
 
 void Heap::heapify() {
-    heapify(0);
+    while (!checkQOH()); // checkQOH checks to see if it is a heap if false it 
+    // swaps the values that are incorrect until it is a heap
 }
 
 Heap::~Heap() {
@@ -124,22 +134,16 @@ Pallet* Heap::dequeue() {
 }
 
 void Heap::enqueue(Pallet* p) {
-    // cout << "enqueuing " << n->id;
-    if (root == 0) {
-        cout << "root " << pq[0]->pallet_number << endl;
-        cout << "p " << p->pallet_number << endl;
-        // pq.insert(pq.begin()+pqLength-1, p);
-        cout << "new " << pq[pqLength-1]->pallet_number << endl;
-        cout << "size " << pq.size() << endl;
-        // pqLength++;
-        return;
+    if (root == -1) {
+        root = 0;
+        pq.insert(pq.begin(), p);
+        pqLength = 1;
+    } else {
+        pq.insert(pq.begin() + pqLength, p);
+        pqLength++;
+        heapify();
+        setTail();
     }
-    // cout << " root" << endl;
-    root = 0;
-    pq.insert(pq.begin(), p);
-    cout << pq[root]->pallet_number << endl;
-    pqLength = 1;
-    // setTail();
 }
 
 void Heap::addPallet(Pallet* p) {

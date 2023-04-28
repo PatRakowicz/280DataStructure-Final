@@ -18,24 +18,30 @@ using namespace std;
 // }
 
 void testHEAP() {
-  const int NUM_PALLETS = 3;
+  const int NUM_PALLETS = 16;
 
     InventoryGenerator generator("data.csv");
     Heap myHeap;
     for (int i = 1; i <= NUM_PALLETS; i++) {
+        Pallet * p = new Pallet;
         Pallet pallet = generator.generate_pallet(i);
+        p->pallet_number = pallet.pallet_number;
+        p->state = pallet.state;
+        p->city = pallet.city;
+        p->weight = pallet.weight;
+        p->qoh = pallet.qoh;
         cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
 
-        myHeap.addPallet(&pallet);
+        myHeap.addPallet(p);
         // myHeap.printItems();
     }
     myHeap.printItems();
 
-    // while (myHeap.getRootQty() < 5) {
-    //     myHeap.restock(50);
-    // }
-    // cout << "\n\n";
-    // myHeap.printItems();
+    while (myHeap.getRootQty() < 5) {
+        myHeap.restock(50);
+    }
+    cout << "\n\n";
+    myHeap.printItems();
 }
 
 void testPrio() {
