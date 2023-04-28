@@ -1,6 +1,4 @@
-// main.cpp
 #include <iostream>
-#include "BSTController.h"
 #include "invGenerator.h"
 #include "heap.h"
 #include "FuncTesting.h"
@@ -52,42 +50,48 @@ void testBST() {
 }
 
 void testHEAP() {
-	const int NUM_PALLETS = 10;
+  const int NUM_PALLETS = 16;
 
-	InventoryGenerator generator("data.csv");
-	Heap myHeap;
-	for (int i = 1; i <= NUM_PALLETS; i++) {
-		Pallet pallet = generator.generate_pallet(i);
-		myHeap.addItem(pallet.city, pallet.state, pallet.qoh);
-		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
-			 << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
-	}
-	cout << "Before sort \n";
-	myHeap.printItems();
+    InventoryGenerator generator("data.csv");
+    Heap myHeap;
+    for (int i = 1; i <= NUM_PALLETS; i++) {
+        Pallet * p = new Pallet;
+        Pallet pallet = generator.generate_pallet(i);
+        p->pallet_number = pallet.pallet_number;
+        p->state = pallet.state;
+        p->city = pallet.city;
+        p->weight = pallet.weight;
+        p->qoh = pallet.qoh;
+        cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
 
-	// while (myHeap.getRootQty() < 5) {
-	//     myHeap.restock(50);
-	// }
+        myHeap.addPallet(p);
+        // myHeap.printItems();
+    }
+    myHeap.printItems();
 
-	myHeap.checkQOH();
+    while (myHeap.getRootQty() < 5) {
+        myHeap.restock(50);
+    }
+    cout << "\n\n";
+    myHeap.printItems();
 }
 
 void testInvGen() {
-	const int NUM_PALLETS = 10;
+    const int NUM_PALLETS = 10;
 
-	InventoryGenerator generator("data.csv");
+    InventoryGenerator generator("data.csv");
 
-	for (int i = 1; i <= NUM_PALLETS; i++) {
-		Pallet pallet = generator.generate_pallet(i);
-		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
-			 << pallet.weight << " pounds\n";
-	}
+    for (int i = 1; i <= NUM_PALLETS; i++) {
+        Pallet pallet = generator.generate_pallet(i);
+        cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds\n";
+    }
 }
 
 int main() {
-//    testInvGen();
-    testBST();
-//    testHEAP();
+    // testInvGen();
+    // testBST();
+    testHEAP();
 
-	return 0;
+    return 0;
 }
+
