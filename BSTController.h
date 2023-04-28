@@ -97,6 +97,9 @@ public:
 
 	Node *getRoot() { return root; }
 
+	vector<Pallet> checkQOH();
+	void restockQOH(int pallet_number, int qoh) { root = restockQOHHelper(root, pallet_number, qoh); }
+
 private:
 	Node *root;
 	void deleteTree(Node *node);
@@ -115,6 +118,10 @@ private:
 	void printInorderHelper(Node *node);
 	void printByLocationHelper(Node *node, const string &location, bool is_state, int &missing_pallet_count,
 							   int &pallet_count);
+
+	Node *restockQOHHelper(Node *node, int pallet_number, int qoh);
+	void checkQOHHelper(Node *node, vector<Pallet> &pallets);
+
 };
 
 void BST::deleteTree(Node *node) {
@@ -282,6 +289,43 @@ Node *BST::balancedNode(Node *node) {
 		return leftRotate(node);
 	}
 	return node;
+}
+
+Node *BST::restockQOHHelper(Node *node, int pallet_number, int qoh) {
+	if (node == nullptr) {
+		return node;
+	} else if (pallet_number < node->pallet.pallet_number) {
+		node->left = restockQOHHelper(node->left, pallet_number, qoh);
+	} else if (pallet_number > node->pallet.pallet_number) {
+		node->right = restockQOHHelper(node->right, pallet_number, qoh);
+	} else {
+		node->pallet.qoh = qoh;
+	}
+	return node;
+}
+
+vector<Pallet> BST::checkQOH() {
+	vector<Pallet> pallets;
+	checkQOHHelper(root, pallets);
+	sort(pallets.begin(), pallets.end(), [](const Pallet& p1, const Pallet& p2) {
+		return p1.qoh < p2.qoh;
+	});
+
+	for (const auto& pallet : pallets) {
+		cout << "Pallet " << pallet.pallet_number << " | " << pallet.state << " | " << pallet.city << " | "
+			 << pallet.weight << " | QOH: " << pallet.qoh << endl;
+	}
+
+	return pallets;
+}
+
+void BST::checkQOHHelper(Node *node, vector<Pallet> &pallets) {
+	if (node == nullptr) {
+		return;
+	}
+	checkQOHHelper(node->left, pallets);
+	pallets.push_back(node->pallet);
+	checkQOHHelper(node->right, pallets);
 }
 
 #endif //INC_280DATASTRUCTURE_FINAL_BSTCONTROLLER_H

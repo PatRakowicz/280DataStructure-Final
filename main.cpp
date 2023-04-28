@@ -31,6 +31,17 @@ void testBST() {
 	cout << "\n Remove Pallet #:6 \n";
 	bst.remove(6);
 	bst.printInorder();
+
+	// Check QOH and restock pallets with QOH less than 5
+	vector<Pallet> lowQOH = bst.checkQOH();
+	for (const auto& pallet : lowQOH) {
+		if (pallet.qoh < 5) {
+			bst.restockQOH(pallet.pallet_number, 10);  // Restock with a QOH of 10
+		}
+	}
+
+	// Print updated pallet information
+	bst.printInorder();
 /*
 	// Time Testing
 	// Measure insertion time for a single pallet into BST
@@ -51,30 +62,32 @@ void testBST() {
 }
 
 void testHEAP() {
-  const int NUM_PALLETS = 16;
+	const int NUM_PALLETS = 16;
 
-    InventoryGenerator generator("data.csv");
-    Heap myHeap;
-    for (int i = 1; i <= NUM_PALLETS; i++) {
-        Pallet * p = new Pallet;
-        Pallet pallet = generator.generate_pallet(i);
-        p->pallet_number = pallet.pallet_number;
-        p->state = pallet.state;
-        p->city = pallet.city;
-        p->weight = pallet.weight;
-        p->qoh = pallet.qoh;
-        cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
+	InventoryGenerator generator("data.csv");
+	Heap myHeap;
+	for (int i = 1; i <= NUM_PALLETS; i++) {
+		Pallet *p = new Pallet;
+		Pallet pallet = generator.generate_pallet(i);
+		p->pallet_number = pallet.pallet_number;
+		p->state = pallet.state;
+		p->city = pallet.city;
+		p->weight = pallet.weight;
+		p->qoh = pallet.qoh;
+		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
+			 << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
 
-        myHeap.addPallet(p);
-        // myHeap.printItems();
-    }
-    myHeap.printItems();
+		myHeap.addPallet(p);
+		// myHeap.printItems();
+	}
+	myHeap.printItems();
 
-    while (myHeap.getRootQty() < 5) {
-        myHeap.restock(50);
-    }
-    cout << "\n\n";
-    myHeap.printItems();
+	while (myHeap.getRootQty() < 5) {
+		myHeap.restock(50);
+	}
+	cout << "\n\n";
+	myHeap.printItems();
+}
 
     myHeap.remove(7);
     cout << "\n\n";
@@ -84,14 +97,15 @@ void testHEAP() {
 }
  
 void testInvGen() {
-    const int NUM_PALLETS = 10;
+	const int NUM_PALLETS = 10;
 
-    InventoryGenerator generator("data.csv");
+	InventoryGenerator generator("data.csv");
 
-    for (int i = 1; i <= NUM_PALLETS; i++) {
-        Pallet pallet = generator.generate_pallet(i);
-        cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds\n";
-    }
+	for (int i = 1; i <= NUM_PALLETS; i++) {
+		Pallet pallet = generator.generate_pallet(i);
+		cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", "
+			 << pallet.weight << " pounds\n";
+	}
 }
 
 int main() {
@@ -99,6 +113,5 @@ int main() {
     // testBST();
     // testHEAP();
 
-    return 0;
+	return 0;
 }
-
