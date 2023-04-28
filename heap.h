@@ -16,18 +16,19 @@ class Heap {
         void setTail();
         bool checkQOH();
         bool checkQOH(int n);
-        void enqueue(Pallet* p);
-        Pallet* dequeue();
         void heapify();
-        // void heapify(int lowest);
+        int search(int pallet_num, int n);
     public:
         Heap();
         ~Heap();
         int getRootQty();
         void addPallet(Pallet* p);
+        Pallet* search(int pallet_num);
+        Pallet* remove(int pallet_num);
         void restock(int amount); //restocks the item
         void printItems(int n);
         void printItems();
+        
 };
 
 Heap::Heap() {
@@ -124,16 +125,31 @@ void Heap::setTail() {
     tail = pqLength - 1;    
 }
 
-Pallet* Heap::dequeue() {
-    Pallet* tmp = pq[root];
-    swap(root, tail);
+int Heap::search(int pallet_num, int n) {
+    if (n < pqLength && n != -1) {
+        if (pallet_num == pq[n]->pallet_number) {
+            return n;
+        }
+        search(pallet_num, (n*2)+1);
+        search(pallet_num, (n*2)+2);
+    }
+}
+
+Pallet* Heap::search(int pallet_num) {
+    return pq[search(pallet_num, root)];
+}
+
+Pallet* Heap::remove(int pallet_num) {
+    int tmpindex = search(pallet_num, root);
+    Pallet* tmp = pq[tmpindex];
+    swap(tail, tmpindex);
     pqLength--;
-    setTail();
     heapify();
+    setTail();
     return tmp;
 }
 
-void Heap::enqueue(Pallet* p) {
+void Heap::addPallet(Pallet* p) {
     if (root == -1) {
         root = 0;
         pq.insert(pq.begin(), p);
@@ -146,14 +162,10 @@ void Heap::enqueue(Pallet* p) {
     }
 }
 
-void Heap::addPallet(Pallet* p) {
-    enqueue(p);
-}
-
 void Heap::restock(int amount) {
-    Pallet* n = dequeue();
+    Pallet* n = pq[root];
     n->qoh += amount;
-    enqueue(n);
+    heapify();
 }
 
 void Heap::printItems(int n) {
