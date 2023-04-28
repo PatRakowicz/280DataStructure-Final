@@ -74,8 +74,14 @@ void testHEAP() {
     }
     cout << "\n\n";
     myHeap.printItems();
-}
 
+    myHeap.remove(7);
+    cout << "\n\n";
+    myHeap.printItems();
+
+    cout << myHeap.search(11)->qoh << endl;
+}
+ 
 void testInvGen() {
     const int NUM_PALLETS = 10;
 
@@ -90,7 +96,7 @@ void testInvGen() {
 int main() {
     // testInvGen();
     // testBST();
-    testHEAP();
+    // testHEAP();
 
     return 0;
 }
