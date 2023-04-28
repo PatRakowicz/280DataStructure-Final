@@ -1,7 +1,7 @@
 #include <iostream>
 #include "invGenerator.h"
 #include "heap.h"
-#include "priority.h"
+//#include "priority.h"
 using namespace std;
 // void testBST() {
 //     const int NUM_PALLETS = 10;
@@ -44,20 +44,20 @@ void testHEAP() {
     myHeap.printItems();
 }
 
-void testPrio() {
-    const int NUM_PALLETS = 10;
-
-    InventoryGenerator generator("data.csv");
-    Priority prio;
-    
-    for (int i = 1; i <= NUM_PALLETS; i++) {
-        Pallet pallet = generator.generate_pallet(i);
-        prio.addPallet(pallet);
-        cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds\n" << pallet.qoh << " on hand" << endl;
-    }
-    
-    prio.print();
-}
+//void testPrio() {
+//    const int NUM_PALLETS = 10;
+//
+//    InventoryGenerator generator("data.csv");
+//    Priority prio;
+//
+//    for (int i = 1; i <= NUM_PALLETS; i++) {
+//        Pallet pallet = generator.generate_pallet(i);
+//        prio.addPallet(pallet);
+//        cout << "Pallet " << pallet.pallet_number << ": " << pallet.state << ", " << pallet.city << ", " << pallet.weight << " pounds\n" << pallet.qoh << " on hand" << endl;
+//    }
+//
+//    prio.print();
+//}
 
 void testInvGen() {
     const int NUM_PALLETS = 10;
