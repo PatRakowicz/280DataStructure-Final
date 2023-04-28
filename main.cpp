@@ -2,6 +2,7 @@
 #include "invGenerator.h"
 #include "heap.h"
 #include "FuncTesting.h"
+#include "BSTControl.h"
 
 using namespace std;
 
