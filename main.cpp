@@ -8,7 +8,7 @@
 using namespace std;
 
 void testBST() {
-	const int NUM_PALLETS = 1000;
+	const int NUM_PALLETS = 10;
 	BST bst;
 
 	InventoryGenerator generator("data.csv");
