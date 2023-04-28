@@ -106,6 +106,7 @@ void Heap::heapify() {
 }
 
 Heap::~Heap() {
+    delete (&pq);
 }
 
 void Heap::setTail() {
