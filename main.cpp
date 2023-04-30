@@ -5,6 +5,12 @@
 
 using namespace std;
 
+// use for testing different functions
+// auto startTime = std::chrono::high_resolution_clock::now();
+// 	auto endTime = std::chrono::high_resolution_clock::now();
+//	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+//	std::cout << "~~~ Execution time for HEAP Insert: " << duration.count() << " milliseconds" << std::endl;
+
 void testBST() {
 	const int NUM_PALLETS = 10;
 	BST bst;
@@ -44,7 +50,7 @@ void testBST() {
 }
 
 void testHEAP() {
-	const int NUM_PALLETS = 16;
+	const int NUM_PALLETS = 10;
 
 	InventoryGenerator generator("data.csv");
 	Heap myHeap;
@@ -60,7 +66,7 @@ void testHEAP() {
 			 << pallet.weight << " pounds, " << pallet.qoh << " on hand" << endl;
 
 		myHeap.addPallet(p);
-		// myHeap.printItems();
+//		 myHeap.printItems();
 	}
 	myHeap.printItems();
 
@@ -90,10 +96,10 @@ void testInvGen() {
 }
 
 int main() {
-    // testInvGen();
-    // testBST();
-    // testHEAP();
+	// testInvGen();
+	testBST();
+	testHEAP();
 
-    return 0;
+	return 0;
 }
 

@@ -1,66 +1,6 @@
 //
 // Created by Patrick on 22/04/2023.
 //
-/*
-main Test
- 	cout << "Testing Insertion and Balance:" << endl;
-	testInsertionAndBalance();
-	cout << endl;
-
-	cout << "Testing Removal and Balance:" << endl;
-	testRemovalAndBalance();
-	cout << endl;
-
-void printTree(Node *node, const string &prefix = "", bool isLeft = true) {
-	if (node != nullptr) {
-		cout << prefix;
-
-		cout << (isLeft ? "|-" : "\\-");
-
-		cout << "Pallet " << node->pallet.pallet_number << ", Height: " << node->height << endl;
-
-		printTree(node->left, prefix + (isLeft ? "|   " : "    "), true);
-		printTree(node->right, prefix + (isLeft ? "|   " : "    "), false);
-	}
-}
-
-void testInsertionAndBalance() {
-	const int NUM_PALLETS = 30;
-	BST bst;
-
-	InventoryGenerator generator("data.csv");
-	for (int i = 1; i <= NUM_PALLETS; i++) {
-		Pallet pallet = generator.generate_pallet(i);
-		bst.insert(pallet);
-		cout << "After inserting pallet " << i << ":" << endl;
-		printTree(bst.getRoot());
-		cout << endl;
-	}
-}
-
-void testRemovalAndBalance() {
-	const int NUM_PALLETS = 30;
-	const int NUM_REMOVALS = 5;
-	BST bst;
-
-	InventoryGenerator generator("data.csv");
-	for (int i = 1; i <= NUM_PALLETS; i++) {
-		Pallet pallet = generator.generate_pallet(i);
-		bst.insert(pallet);
-	}
-
-	cout << "Initial tree:" << endl;
-	printTree(bst.getRoot());
-	cout << endl;
-
-	for (int i = 1; i <= NUM_REMOVALS; i++) {
-		bst.remove(i);
-		cout << "After removing pallet " << i << ":" << endl;
-		printTree(bst.getRoot());
-		cout << endl;
-	}
-}*/
-
 #ifndef INC_280DATASTRUCTURE_FINAL_BSTCONTROLLER_H
 #define INC_280DATASTRUCTURE_FINAL_BSTCONTROLLER_H
 
