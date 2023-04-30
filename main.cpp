@@ -1,8 +1,7 @@
 #include <iostream>
 #include "invGenerator.h"
 #include "heap.h"
-#include "FuncTesting.h"
-#include "BSTControl.h"
+#include "BSTController.h"
 
 using namespace std;
 
@@ -42,23 +41,6 @@ void testBST() {
 
 	// Print updated pallet information
 	bst.printInorder();
-/*
-	// Time Testing
-	// Measure insertion time for a single pallet into BST
-	Pallet new_pallet = generator.generate_pallet(1001);
-	auto insertion_time = measureBSTInsertionTime(bst, new_pallet);
-	std::cout << "BST insertion time for a single pallet: " << insertion_time.count() << " microseconds" << std::endl;
-
-	// Measure deletion time for a single pallet from BST
-	int pallet_number_to_remove = 852;
-	auto deletion_time = measureBSTDeletionTime(bst, pallet_number_to_remove);
-	std::cout << "BST deletion time for a single pallet: " << deletion_time.count() << " microseconds" << std::endl;
-
-	// Measure search time for a single pallet in BST
-	int pallet_number_to_find = 765;
-	auto search_time = measureBSTSearchTime(bst, pallet_number_to_find);
-	std::cout << "BST search time for a single pallet: " << search_time.count() << " microseconds" << std::endl;
-*/
 }
 
 void testHEAP() {
@@ -87,15 +69,14 @@ void testHEAP() {
 	}
 	cout << "\n\n";
 	myHeap.printItems();
+
+	myHeap.remove(7);
+	cout << "\n\n";
+	myHeap.printItems();
+
+	cout << myHeap.search(11)->qoh << endl;
 }
 
-    myHeap.remove(7);
-    cout << "\n\n";
-    myHeap.printItems();
-
-    cout << myHeap.search(11)->qoh << endl;
-}
- 
 void testInvGen() {
 	const int NUM_PALLETS = 10;
 
@@ -113,5 +94,6 @@ int main() {
     // testBST();
     // testHEAP();
 
-	return 0;
+    return 0;
 }
+
