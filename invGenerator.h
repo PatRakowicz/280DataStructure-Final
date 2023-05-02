@@ -51,7 +51,6 @@ public:
         }
 
         // Generate a random index for the city and state vectors
-        // unsigned seed = chrono::system_clock::now().time_since_epoch().count();
         unsigned seed = pallet_number;
         std::mt19937 gen(seed);
         std::uniform_int_distribution<> index_dist(0, cities.size() - 1);
@@ -69,8 +68,6 @@ private:
 
     int generate_weight(int seed) {
         // Generate a random weight between 1 and 1000 pounds
-        // unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-
         std::mt19937 gen(seed);
         std::uniform_int_distribution<> weight_dist(25, 200);
         return weight_dist(gen);
@@ -78,8 +75,6 @@ private:
 
     int generate_qoh(int seed) {
         // Generate a random weight between 1 and 1000 pounds
-        // unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-
         std::mt19937 gen(seed);
         std::uniform_int_distribution<> qoh_dist(1, 200);
         return qoh_dist(gen);
